@@ -1,0 +1,14 @@
+endpoint: http://localhost:4466
+
+datasource:
+  name: db
+  connector: postgres
+  host: localhost
+  port: 5432
+  user: postgres
+  password: password
+  database: prisma
+
+generate:
+  - generator: typescript-client
+    output: ./generated/prisma-client/
