@@ -13,57 +13,36 @@ import { User as UserModel, Post as PostModel } from '@prisma/client';
 
 @Controller()
 export class AppController {
-  private serviceName: string;
   constructor(
     private readonly userService: UserService,
     private readonly postService: PostService,
-  ) {
-    this.serviceName = this.constructor.name;
-  }
+  ) { }
 
   @Get('post/:id')
   async getPostById(@Param('id') id: string): Promise<PostModel> {
-    console.log('this.serviceName', this.serviceName);
-    return this.postService.post({ id: Number(id) });
+    return this.postService.findPostRecord(Number(id));
   }
 
   @Get('feed')
   async getPublishedPosts(): Promise<PostModel[]> {
-    return this.postService.posts({
-      where: { published: true },
-    });
+    // return this.postService.posts({
+    //   where: { published: true },
+    // });
+    return this.postService.findFeed();
   }
 
   @Get('filtered-posts/:searchString')
   async getFilteredPosts(
     @Param('searchString') searchString: string,
   ): Promise<PostModel[]> {
-    return this.postService.posts({
-      where: {
-        OR: [
-          {
-            title: { contains: searchString },
-          },
-          {
-            content: { contains: searchString },
-          },
-        ],
-      },
-    });
+    return this.postService.filterPostByString(searchString);
   }
 
   @Post('post')
   async createDraft(
     @Body() postData: { title: string; content?: string; authorEmail: string },
   ): Promise<PostModel> {
-    const { title, content, authorEmail } = postData;
-    return this.postService.createPost({
-      title,
-      content,
-      author: {
-        connect: { email: authorEmail },
-      },
-    });
+    return this.postService.createPost(postData);
   }
 
   @Post('user')
@@ -75,14 +54,11 @@ export class AppController {
 
   @Put('publish/:id')
   async publishPost(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.updatePost({
-      where: { id: Number(id) },
-      data: { published: true },
-    });
+    return this.postService.publishPost(Number(id));
   }
 
   @Delete('post/:id')
   async deletePost(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.deletePost({ id: Number(id) });
+    return this.postService.deletePost(Number(id));
   }
 }
