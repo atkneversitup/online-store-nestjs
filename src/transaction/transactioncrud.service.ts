@@ -15,7 +15,9 @@ export class TransactionCRUDService
     console.log('TransactionCRUDService constructor');
   }
   async findOne(id: number): Promise<Transaction> {
-    return this.prisma.getInstance().transaction.findUnique({ where: { id } });
+    return this.prisma
+      .getInstance()
+      .transaction.findUnique({ where: { id }, include: { product: true } });
   }
   async findAll(): Promise<Transaction[]> {
     return this.prisma.getInstance().transaction.findMany();
