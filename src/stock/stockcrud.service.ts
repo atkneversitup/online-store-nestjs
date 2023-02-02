@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { StockHistory, Prisma } from '@prisma/client';
+import { StockHistory, Prisma, PrismaClient } from '@prisma/client';
 import { CrudInterface } from 'src/interface/crud.interface';
-import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class StockCRUDService
   implements
@@ -11,10 +10,12 @@ export class StockCRUDService
       Prisma.StockHistoryWhereInput
     >
 {
-  constructor(private prisma: PrismaService) {}
-
+  private prisma: PrismaClient;
+  constructor() {
+    this.prisma = new PrismaClient();
+  }
   async findOne(id: number): Promise<StockHistory> {
-    return this.prisma.getInstance().stockHistory.findUnique({ where: { id } });
+    return this.prisma.stockHistory.findUnique({ where: { id } });
   }
   async findMany(params?: {
     skip?: number;
@@ -24,10 +25,10 @@ export class StockCRUDService
     include?: Prisma.StockHistoryInclude;
     orderBy?: Prisma.StockHistoryOrderByWithRelationInput;
   }): Promise<StockHistory[]> {
-    return this.prisma.getInstance().stockHistory.findMany(params);
+    return this.prisma.stockHistory.findMany(params);
   }
   async findAll(): Promise<StockHistory[]> {
-    return this.prisma.getInstance().stockHistory.findMany();
+    return this.prisma.stockHistory.findMany();
   }
   async update(params: {
     where: Prisma.StockHistoryWhereUniqueInput;
@@ -35,7 +36,7 @@ export class StockCRUDService
   }): Promise<StockHistory> {
     {
       const { data, where } = params;
-      return this.prisma.getInstance().stockHistory.update({
+      return this.prisma.stockHistory.update({
         data,
         where,
       });
@@ -43,9 +44,9 @@ export class StockCRUDService
   }
 
   async create(data: Prisma.StockHistoryCreateInput): Promise<StockHistory> {
-    return this.prisma.getInstance().stockHistory.create({ data });
+    return this.prisma.stockHistory.create({ data });
   }
   async delete(id: number): Promise<StockHistory> {
-    return this.prisma.getInstance().stockHistory.delete({ where: { id } });
+    return this.prisma.stockHistory.delete({ where: { id } });
   }
 }

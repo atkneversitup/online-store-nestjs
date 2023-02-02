@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Transaction, Prisma } from '@prisma/client';
+import { Transaction, Prisma, PrismaClient } from '@prisma/client';
 import { CrudInterface } from 'src/interface/crud.interface';
-import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class TransactionCRUDService
   implements
@@ -11,16 +10,18 @@ export class TransactionCRUDService
       Prisma.TransactionWhereInput
     >
 {
-  constructor(private prisma: PrismaService) {
-    console.log('TransactionCRUDService constructor');
+  private prisma: PrismaClient;
+  constructor() {
+    this.prisma = new PrismaClient();
   }
   async findOne(id: number): Promise<Transaction> {
-    return this.prisma
-      .getInstance()
-      .transaction.findUnique({ where: { id }, include: { product: true } });
+    return this.prisma.transaction.findUnique({
+      where: { id },
+      include: { product: true },
+    });
   }
   async findAll(): Promise<Transaction[]> {
-    return this.prisma.getInstance().transaction.findMany();
+    return this.prisma.transaction.findMany();
   }
   async findMany(params?: {
     skip?: number;
@@ -30,10 +31,10 @@ export class TransactionCRUDService
     include?: Prisma.TransactionInclude;
     orderBy?: Prisma.TransactionOrderByWithRelationInput;
   }): Promise<Transaction[]> {
-    return this.prisma.getInstance().transaction.findMany(params);
+    return this.prisma.transaction.findMany(params);
   }
   async create(data: Prisma.TransactionCreateManyInput): Promise<Transaction> {
-    return this.prisma.getInstance().transaction.create({ data });
+    return this.prisma.transaction.create({ data });
   }
   async update(params: {
     where: Prisma.TransactionWhereUniqueInput;
@@ -41,13 +42,13 @@ export class TransactionCRUDService
   }): Promise<Transaction> {
     {
       const { data, where } = params;
-      return this.prisma.getInstance().transaction.update({
+      return this.prisma.transaction.update({
         data,
         where,
       });
     }
   }
   async delete(id: number): Promise<Transaction> {
-    return this.prisma.getInstance().transaction.delete({ where: { id } });
+    return this.prisma.transaction.delete({ where: { id } });
   }
 }

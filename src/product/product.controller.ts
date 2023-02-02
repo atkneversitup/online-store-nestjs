@@ -2,15 +2,11 @@ import { Controller } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import {
-  ManageProductQuantityDto,
-  ManageProductQuantityResult,
-} from './product.interface';
+import { ManageProductQuantityDto } from './product.interface';
+import { ManageProductQuantityResult } from './dto/product.dto';
 @Controller('product')
 export class ProductController {
-  constructor(private readonly productService: ProductService) {
-    console.log('ProductController.constructor()');
-  }
+  constructor(private readonly productService: ProductService) {}
   @Get()
   async findAll() {
     return this.productService.findAll();

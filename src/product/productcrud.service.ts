@@ -1,20 +1,22 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { Product, Prisma } from '@prisma/client';
+import { Product, Prisma,PrismaClient } from '@prisma/client';
 import { CrudInterface } from 'src/interface/crud.interface';
 @Injectable()
 export class ProductCRUDService
   implements
   CrudInterface<Product, Prisma.ProductUpdateInput, Prisma.ProductWhereInput> {
-  constructor(private prisma: PrismaService ) { }
+  private prisma: PrismaClient;
+  constructor() { 
+    this.prisma = new PrismaClient();
+  }
   // findOne(id: number): Promise<T | null>;
   // findAll(): Promise<T[]>;
   // create(data: D): Promise<T>;
   // update(params: { where: W; data: D }): Promise<T>;
   // delete(id: number): Promise<T>;
   async findAll(): Promise<Product[]> {
-    return this.prisma.getInstance().product.findMany();
+    return this.prisma.product.findMany();
   }
   async findMany(params?: {
     skip?: number;
@@ -23,13 +25,13 @@ export class ProductCRUDService
     where?: Prisma.ProductWhereInput;
     orderBy?: Prisma.ProductOrderByWithRelationInput;
   }): Promise<Product[]> {
-    return this.prisma.getInstance().product.findMany(params);
+    return this.prisma.product.findMany(params);
   }
   async findOne(id: number): Promise<Product | null> {
-    return this.prisma.getInstance().product.findUnique({ where: { id } });
+    return this.prisma.product.findUnique({ where: { id } });
   }
   async create(data: Prisma.ProductCreateInput): Promise<Product> {
-    return this.prisma.getInstance().product.create({ data });
+    return this.prisma.product.create({ data });
   }
   async update(params: {
     where: Prisma.ProductWhereUniqueInput;
@@ -37,13 +39,13 @@ export class ProductCRUDService
   }): Promise<Product> {
     {
       const { data, where } = params;
-      return this.prisma.getInstance().product.update({
+      return this.prisma.product.update({
         data,
         where,
       });
     }
   }
   async delete(id: number): Promise<Product> {
-    return this.prisma.getInstance().product.delete({ where: { id } });
+    return this.prisma.product.delete({ where: { id } });
   }
 }

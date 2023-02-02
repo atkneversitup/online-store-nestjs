@@ -2,10 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ProductCRUDService } from './productcrud.service';
 import { Prisma, Product } from '@prisma/client';
 import { StockService } from 'src/stock/stock.service';
-import {
-  ManageProductQuantityDto,
-  ManageProductQuantityResult,
-} from './product.interface';
+import { ManageProductQuantityDto } from './product.interface';
+import { ManageProductQuantityResult } from './dto/product.dto';
 @Injectable()
 export class ProductService {
   constructor(

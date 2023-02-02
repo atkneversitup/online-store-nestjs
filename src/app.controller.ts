@@ -8,57 +8,40 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UserService } from './user/user.service';
-import { PostService } from './post/post.service';
 import { User as UserModel, Post as PostModel } from '@prisma/client';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly postService: PostService,
-  ) { }
+  constructor(private readonly userService: UserService) {}
 
-  @Get('post/:id')
-  async getPostById(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.findPostRecord(Number(id));
-  }
+  // @Get('filtered-posts/:searchString')
+  // async getFilteredPosts(
+  //   @Param('searchString') searchString: string,
+  // ): Promise<PostModel[]> {
+  //   return this.postService.filterPostByString(searchString);
+  // }
 
-  @Get('feed')
-  async getPublishedPosts(): Promise<PostModel[]> {
-    // return this.postService.posts({
-    //   where: { published: true },
-    // });
-    return this.postService.findFeed();
-  }
+  // @Post('post')
+  // async createDraft(
+  //   @Body() postData: { title: string; content?: string; authorEmail: string },
+  // ): Promise<PostModel> {
+  //   return this.postService.createPost(postData);
+  // }
 
-  @Get('filtered-posts/:searchString')
-  async getFilteredPosts(
-    @Param('searchString') searchString: string,
-  ): Promise<PostModel[]> {
-    return this.postService.filterPostByString(searchString);
-  }
+  // @Post('user')
+  // async signupUser(
+  //   @Body() userData: { name?: string; email: string },
+  // ): Promise<UserModel> {
+  //   return this.userService.createUser(userData);
+  // }
 
-  @Post('post')
-  async createDraft(
-    @Body() postData: { title: string; content?: string; authorEmail: string },
-  ): Promise<PostModel> {
-    return this.postService.createPost(postData);
-  }
+  // @Put('publish/:id')
+  // async publishPost(@Param('id') id: string): Promise<PostModel> {
+  //   return this.postService.publishPost(Number(id));
+  // }
 
-  @Post('user')
-  async signupUser(
-    @Body() userData: { name?: string; email: string },
-  ): Promise<UserModel> {
-    return this.userService.createUser(userData);
-  }
-
-  @Put('publish/:id')
-  async publishPost(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.publishPost(Number(id));
-  }
-
-  @Delete('post/:id')
-  async deletePost(@Param('id') id: string): Promise<PostModel> {
-    return this.postService.deletePost(Number(id));
-  }
+  // @Delete('post/:id')
+  // async deletePost(@Param('id') id: string): Promise<PostModel> {
+  //   return this.postService.deletePost(Number(id));
+  // }
 }
