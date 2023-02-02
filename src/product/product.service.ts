@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ProductCRUDService } from './productcrud.service';
 import { Prisma, Product } from '@prisma/client';
 import { StockService } from 'src/stock/stock.service';
-import { ManageProductQuantityDto } from './product.interface';
-import { ManageProductQuantityResult } from './dto/product.dto';
+import {
+  IManageProductQuantity,
+  IManageProductQuantityResult,
+} from './interface/manage-product-quantity.interface';
 @Injectable()
 export class ProductService {
   constructor(
@@ -25,8 +27,8 @@ export class ProductService {
   }
   async manageStock(
     id: number,
-    manageProductQuantityDto: ManageProductQuantityDto,
-  ): Promise<ManageProductQuantityResult> {
+    manageProductQuantityDto: IManageProductQuantity,
+  ): Promise<IManageProductQuantityResult> {
     // type : 'increase' | 'decrease'
     const { type, quantity } = manageProductQuantityDto;
     const product = await this.productCRUDService.findOne(id);
@@ -63,7 +65,8 @@ export class ProductService {
   }): Promise<Product> {
     return this.productCRUDService.update(params);
   }
-  async delete(id: number): Promise<Product> {
-    return this.productCRUDService.delete(id);
+  async delete(id: number): Promise<string> {
+    await this.productCRUDService.delete(id);
+    return 'Product deleted';
   }
 }
